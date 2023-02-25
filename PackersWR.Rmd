@@ -1,0 +1,31 @@
+```{r}
+library(tidyverse)
+
+```
+
+```{r}
+
+wr_list = list()
+wr_merged = data_frame()
+
+for(i in 1:12) {
+  path = paste("../Packers WR Analysis/ReceivingCSVs/20", i+9, ".csv", sep="")
+  print(path)
+  wr_list[[i]] = read_csv(path) %>% 
+    mutate(Year = 2009 + i) 
+  
+  wr_merged = rbind(wr_merged,wr_list[[i]])
+}
+
+wr_merged =  wr_merged %>% 
+  filter(Yds > 200) %>% 
+  mutate(Player = paste(Player, " (", Year, ")", sep="")) %>% 
+  slice_max(order_by = `Y/G`, n = 5)
+wr_merged
+
+ggplot(wr_merged, aes(x = Player, y = `Y/G`)) +
+  geom_bar(stat='identity')
+  
+
+```
+
